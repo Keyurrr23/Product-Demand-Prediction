@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Demand Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <div class="eyebrow">MLOps • Machine Learning</div>
+    <h1>Product Demand Predictor</h1>
+    <p class="intro">Estimate product demand using price, promotion, inventory, and calendar details.</p>
+    <form method="post" action="/predict">
+      <div class="grid">
+        <label>Product ID
+          <select name="product_id" required>
+            <option value="P001">P001</option><option value="P002">P002</option>
+            <option value="P003">P003</option><option value="P004">P004</option><option value="P005">P005</option>
+          </select>
+        </label>
+        <label>Category
+          <select name="category" required>
+            <option>Grocery</option><option>Home</option><option>Electronics</option><option>Fashion</option>
+          </select>
+        </label>
+        <label>Price (₹)
+          <input name="price" type="number" min="0.01" step="0.01" value="100" required>
+        </label>
+        <label>Promotion
+          <select name="promotion"><option value="0">No</option><option value="1">Yes</option></select>
+        </label>
+        <label>Stock available
+          <input name="stock_available" type="number" min="0" value="100" required>
+        </label>
+        <label>Day of week
+          <select name="day_of_week">
+            <option value="0">Monday</option><option value="1">Tuesday</option>
+            <option value="2">Wednesday</option><option value="3">Thursday</option>
+            <option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option>
+          </select>
+        </label>
+        <label>Month
+          <select name="month">
+            {% for m in range(1,13) %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+          </select>
+        </label>
+      </div>
+      <button type="submit">Predict demand</button>
+    </form>
+    {% if result is not none %}
+      <section class="result"><span>Estimated demand</span><strong>{{ result }} units</strong><small>Model estimate only; not a guarantee of future sales.</small></section>
+    {% endif %}
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <p class="footer">API endpoint: <code>POST /api/predict</code> · Health: <code>GET /health</code></p>
+  </main>
+</body>
+</html>
